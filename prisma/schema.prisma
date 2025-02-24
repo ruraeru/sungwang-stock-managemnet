@@ -30,7 +30,7 @@ model PriceChange {
   productId Int
   price     Int      @db.Int
   date      DateTime @default(now())
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model StockChange {
@@ -38,5 +38,5 @@ model StockChange {
   productId Int
   quantity  Int
   date      DateTime @default(now())
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 }

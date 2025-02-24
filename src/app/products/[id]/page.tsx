@@ -18,7 +18,7 @@ export default async function DetailProduct({ params }: { params: Promise<{ id: 
     if (product === null) {
         return notFound();
     }
-    const { id, name, description, category, unit, currentStock, imageUrl } = product;
+    const { id, name, description, category, imageUrl } = product;
     return (
         <div>
             <ul>
