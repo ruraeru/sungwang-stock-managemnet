@@ -3,6 +3,7 @@
 import db from "@/lib/db";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import fs from "fs/promises";
 
 const productSchema = z.object({
   name: z.string(),
@@ -11,6 +12,7 @@ const productSchema = z.object({
   unit: z.string(),
   currentStock: z.string(),
   price: z.string(),
+  photo: z.string(),
 });
 
 export async function createProduct(_: unknown, formData: FormData) {
@@ -21,13 +23,19 @@ export async function createProduct(_: unknown, formData: FormData) {
     unit: formData.get("unit"),
     currentStock: formData.get("currentStock"),
     price: formData.get("price"),
+    photo: formData.get("photo"),
   };
+  if (data.photo instanceof File) {
+    const photoData = await data.photo.arrayBuffer();
+    await fs.appendFile(`./public/${data.photo.name}`, Buffer.from(photoData));
+    data.photo = `/${data.photo.name}`;
+  }
   const results = productSchema.safeParse(data);
 
   if (!results.success) {
     return results.error.flatten();
   } else {
-    const { name, description, category, unit, currentStock, price } =
+    const { name, description, category, unit, currentStock, price, photo } =
       results.data;
     const product = await db.product.create({
       data: {
@@ -41,6 +49,7 @@ export async function createProduct(_: unknown, formData: FormData) {
             price: parseInt(price),
           },
         },
+        imageUrl: photo,
       },
       select: {
         id: true,

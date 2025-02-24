@@ -22,6 +22,7 @@ model Product {
   currentStock Int           @default(0)
   priceHistory PriceChange[]
   stockHistory StockChange[]
+  imageUrl     String?
 }
 
 model PriceChange {

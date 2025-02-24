@@ -1,4 +1,5 @@
 import db from "@/lib/db";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 
 async function getProduct(id: number) {
@@ -17,10 +18,15 @@ export default async function DetailProduct({ params }: { params: Promise<{ id: 
     if (product === null) {
         return notFound();
     }
-    const { id, name, description, category, unit, currentStock } = product;
+    const { id, name, description, category, unit, currentStock, imageUrl } = product;
     return (
         <div>
             <ul>
+                {imageUrl && (
+                    <li>
+                        <Image src={imageUrl} width={1000} height={1000} alt="w" priority />
+                    </li>
+                )}
                 <li>{id}</li>
                 <li>{name}</li>
                 <li>{description}</li>
