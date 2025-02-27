@@ -26,9 +26,16 @@ export async function createProduct(_: unknown, formData: FormData) {
     photo: formData.get("photo"),
   };
   if (data.photo instanceof File) {
+    const randomFileName = `${Math.random().toString(36).substring(2, 11)}.${
+      data.photo.type.split("/")[1]
+    }`;
     const photoData = await data.photo.arrayBuffer();
-    await fs.appendFile(`./public/${data.photo.name}`, Buffer.from(photoData));
-    data.photo = `/${data.photo.name}`;
+    await fs.appendFile(
+      `./public/images/${randomFileName}`,
+      Buffer.from(photoData)
+    );
+
+    data.photo = `/images/${randomFileName}`;
   }
   const results = productSchema.safeParse(data);
 

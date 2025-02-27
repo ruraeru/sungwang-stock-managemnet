@@ -15,6 +15,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const response = await result.response;
     const output = await response.text();
 
+    // const image_path = r'
+
     return NextResponse.json({ output });
   } catch (err) {
     console.error(err);
