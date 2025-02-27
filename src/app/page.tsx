@@ -1,6 +1,6 @@
 "use client"
 
-import { FormEvent, ReactElement, useState } from "react";
+import { FormEvent, ReactElement, useEffect, useRef, useState } from "react";
 import { unified } from "unified";
 import markdown from "remark-parse";
 import remarkRehype from "remark-rehype";
@@ -9,10 +9,15 @@ import html from "rehype-stringify";
 export default function Home() {
 
   // const prompt = "한국어로 인사해봐";
+  const [promptHistory, setHistoryPt] = useState<string[]>([]);
   const [prompt, setPrompt] = useState('');
   const [outputs, setOutPuts] = useState<ReactElement[]>([]);
   const [isLoading, setLoading] = useState(false);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   const generateText = async () => {
     try {
@@ -60,18 +65,33 @@ export default function Home() {
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
+    setHistoryPt(prev => [...prev, prompt])
     setPrompt("");
+  }
+
+  const selectPrompt = (prompt: string) => {
+    setPrompt(prompt);
+    inputRef.current?.focus();
   }
 
   return (
     <div className="flex flex-col items-start pt-20 p-16 gap-5">
       <h1 className="font-bold text-5xl text-center w-full">gemini 2.0 flash</h1>
+      <h1>이전 질문들?!</h1>
+      <ul>
+        {promptHistory.map((history, index) => (
+          <li key={index} onClick={() => selectPrompt(history)}>
+            {index + 1}: {history}
+          </li>
+        ))}
+      </ul>
       <form onSubmit={onSubmit} className="w-full">
         <input
           className="bg-transparent rounded-md w-full 
           h-10 focus:outline-none ring-2 focus:ring-4 transition
           ring-neutral-200 focus:ring-slate-500-500 border-none placeholder:text-neutral-400"
           value={prompt}
+          ref={inputRef}
           onChange={onChange}
         />
         <button onClick={generateText} />
