@@ -7,7 +7,6 @@ import remarkRehype from "remark-rehype";
 import html from "rehype-stringify";
 
 export default function Home() {
-
   // const prompt = "한국어로 인사해봐";
   const [promptHistory, setHistoryPt] = useState<string[]>([]);
   const [prompt, setPrompt] = useState('');
@@ -27,7 +26,7 @@ export default function Home() {
         headers: {
           "Content-type": "application/json"
         },
-        body: JSON.stringify(({ body: prompt }))
+        body: JSON.stringify(({ prompt: prompt }))
       })
       const data = await response.json();
 
@@ -85,7 +84,14 @@ export default function Home() {
           </li>
         ))}
       </ul>
-      <form onSubmit={onSubmit} className="w-full">
+      <form onSubmit={onSubmit} className="w-full flex flex-col gap-5">
+        <input
+          className="bg-transparent rounded-md w-full 
+          h-10 focus:outline-none ring-2 focus:ring-4 transition
+          ring-neutral-200 focus:ring-slate-500-500 border-none placeholder:text-neutral-400"
+          type="file"
+          accept="image/*"
+        />
         <input
           className="bg-transparent rounded-md w-full 
           h-10 focus:outline-none ring-2 focus:ring-4 transition
@@ -107,7 +113,7 @@ export default function Home() {
           {
             isLoading && (
               <div className="
-              animate-spin rounded-full h-16 w-16 border-l-2 border-cyan-600 border-transparent" />
+              animate-spin rounded-full h-16 w-16 border-l-2 border-cyan-600"/>
             )
           }
         </div>
