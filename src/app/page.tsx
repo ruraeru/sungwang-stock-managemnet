@@ -5,6 +5,7 @@ import { unified } from "unified";
 import markdown from "remark-parse";
 import remarkRehype from "remark-rehype";
 import html from "rehype-stringify";
+import fs from "fs";
 
 export default function Home() {
   // const prompt = "한국어로 인사해봐";
@@ -13,6 +14,7 @@ export default function Home() {
   const [outputs, setOutPuts] = useState<ReactElement[]>([]);
   const [isLoading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const [image, setImage] = useState<{ imageData: null | string, imageType: null | string }>({ imageData: null, imageType: null });
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -26,7 +28,7 @@ export default function Home() {
         headers: {
           "Content-type": "application/json"
         },
-        body: JSON.stringify(({ prompt: prompt }))
+        body: JSON.stringify(({ prompt: prompt, imageData: image.imageData, imageType: image.imageType }))
       })
       const data = await response.json();
 
@@ -73,6 +75,21 @@ export default function Home() {
     inputRef.current?.focus();
   }
 
+  const onImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { target: { files } } = e;
+    if (!files) return;
+    const file = files[0];
+
+    const photoData = await file.arrayBuffer();
+    const imageType = file.type;
+    const base64Data = Buffer.from(photoData).toString("base64");
+
+    setImage({
+      imageData: base64Data,
+      imageType
+    });
+  }
+
   return (
     <div className="flex flex-col items-start pt-20 p-16 gap-5">
       <h1 className="font-bold text-5xl text-center w-full">gemini 2.0 flash</h1>
@@ -91,6 +108,7 @@ export default function Home() {
           ring-neutral-200 focus:ring-slate-500-500 border-none placeholder:text-neutral-400"
           type="file"
           accept="image/*"
+          onChange={onImageChange}
         />
         <input
           className="bg-transparent rounded-md w-full 
