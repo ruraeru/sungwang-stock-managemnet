@@ -25,7 +25,9 @@ export async function POST(req: NextRequest, res: Response) {
       data.imageType //이미지 타입
     );
 
-    const result = await model.generateContent([prompt, imageData]);
+    const result = await model.generateContent(
+      data.imageType ? [prompt, imageData] : prompt
+    );
 
     const response = result.response;
     const output = response.text();

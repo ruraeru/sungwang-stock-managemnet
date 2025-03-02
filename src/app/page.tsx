@@ -5,7 +5,6 @@ import { unified } from "unified";
 import markdown from "remark-parse";
 import remarkRehype from "remark-rehype";
 import html from "rehype-stringify";
-import fs from "fs";
 
 export default function Home() {
   // const prompt = "한국어로 인사해봐";
@@ -16,6 +15,7 @@ export default function Home() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [image, setImage] = useState<{ imageData: null | string, imageType: null | string }>({ imageData: null, imageType: null });
 
+  //prompt 입력창 ref
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
@@ -23,6 +23,7 @@ export default function Home() {
   const generateText = async () => {
     try {
       setLoading(true);
+      //next api route로 값 받아오기
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: {
@@ -43,6 +44,7 @@ export default function Home() {
     }
   }
 
+  //prompt에서 받아온 md text를 html로 변환
   const convertHTML = (md: string) => {
     try {
       const html_text = unified()
@@ -103,7 +105,7 @@ export default function Home() {
       </ul>
       <form onSubmit={onSubmit} className="w-full flex flex-col gap-5">
         <input
-          className="bg-transparent rounded-md w-full 
+          className="bg-transparent rounded-md  
           h-10 focus:outline-none ring-2 focus:ring-4 transition
           ring-neutral-200 focus:ring-slate-500-500 border-none placeholder:text-neutral-400"
           type="file"
@@ -111,8 +113,8 @@ export default function Home() {
           onChange={onImageChange}
         />
         <input
-          className="bg-transparent rounded-md w-full 
-          h-10 focus:outline-none ring-2 focus:ring-4 transition
+          className="bg-transparent rounded-md 
+          min-h-10 focus:outline-none ring-2 focus:ring-4 transition
           ring-neutral-200 focus:ring-slate-500-500 border-none placeholder:text-neutral-400"
           value={prompt}
           ref={inputRef}
