@@ -5,6 +5,7 @@ import { unified } from "unified";
 import markdown from "remark-parse";
 import remarkRehype from "remark-rehype";
 import html from "rehype-stringify";
+import DOMPurify from "dompurify";
 
 export default function Home() {
   // const prompt = "한국어로 인사해봐";
@@ -19,6 +20,10 @@ export default function Home() {
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
+
+  const sanitizedData = (data: string) => ({
+    __html: DOMPurify.sanitize(data)
+  });
 
   const generateText = async () => {
     try {
@@ -53,11 +58,11 @@ export default function Home() {
         .use(html)
         .processSync(md);
 
-      return <div dangerouslySetInnerHTML={{ __html: html_text.value }} />;
+      return <div dangerouslySetInnerHTML={sanitizedData(html_text.value + "")} />;
     }
     catch (err) {
       console.error("Markdown parsing error: ", err);
-      setOutPuts([<div key="error" dangerouslySetInnerHTML={{ __html: md }} />]);
+      setOutPuts([<div key="error" dangerouslySetInnerHTML={sanitizedData(md)} />]);
     }
   }
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
