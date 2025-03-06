@@ -11,10 +11,7 @@ export interface IinitialState {
 }
 
 export default function Home() {
-  const [promptHistory, setHistoryPt] = useState<string[]>([]);
   const [prompt, setPrompt] = useState('');
-  const [outputs, setOutPuts] = useState<ReactElement[]>([]);
-  const [isLoading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   //prompt 입력창 ref
@@ -31,17 +28,10 @@ export default function Home() {
     setPrompt(value);
   }
 
-  const onSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    setHistoryPt(prev => [...prev, prompt])
-    setPrompt("");
-  }
-
   const selectPrompt = (prompt: string) => {
     setPrompt(prompt);
     inputRef.current?.focus();
   }
-
 
   const initialState: IinitialState = {
     promptHistory: [],
