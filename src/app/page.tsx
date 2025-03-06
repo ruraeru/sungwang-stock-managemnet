@@ -1,6 +1,6 @@
 "use client"
 
-import { FormEvent, ReactElement, useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import DOMPurify from "dompurify";
 import questionGemini from "./actions";
 
@@ -74,7 +74,7 @@ export default function Home() {
 
       <div className="flex items-center gap-5">
         <h1>답변</h1>
-        <button onClick={() => setOutPuts([])}>답변 초기화</button>
+        <button>답변 초기화</button>
       </div>
 
       <div className="w-full flex flex-col gap-5">
@@ -91,12 +91,6 @@ export default function Home() {
             <div dangerouslySetInnerHTML={sanitizedData(output)} />
           </div>
         ))}
-
-        {/* {state?.output && (
-          <div className="p-5 rounded-3xl bg-gray-500">
-            <div dangerouslySetInnerHTML={sanitizedData(state.output)} />
-          </div>
-        )} */}
       </div>
     </div>
   );
