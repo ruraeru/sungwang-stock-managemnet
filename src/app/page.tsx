@@ -4,6 +4,12 @@ import { FormEvent, ReactElement, useActionState, useEffect, useRef, useState } 
 import DOMPurify from "dompurify";
 import questionGemini from "./actions";
 
+export interface IinitialState {
+  promptHistory: string[];
+  outputs: string[];
+  prompt: string;
+}
+
 export default function Home() {
   const [promptHistory, setHistoryPt] = useState<string[]>([]);
   const [prompt, setPrompt] = useState('');
@@ -36,14 +42,21 @@ export default function Home() {
     inputRef.current?.focus();
   }
 
-  const [state, action] = useActionState(questionGemini, null);
+
+  const initialState: IinitialState = {
+    promptHistory: [],
+    outputs: [],
+    prompt: "",
+  }
+
+  const [state, action, isPending] = useActionState(questionGemini, initialState);
 
   return (
     <div className="flex flex-col items-start pt-20 p-16 gap-5">
       <h1 className="font-bold text-5xl text-center w-full">gemini 2.0 flash</h1>
       <h1>이전 질문들?!</h1>
       <ul>
-        {promptHistory.map((history, index) => (
+        {state.promptHistory.map((history, index) => (
           <li key={index} onClick={() => selectPrompt(history)}>
             {index + 1}: {history}
           </li>
@@ -77,22 +90,23 @@ export default function Home() {
       <div className="w-full flex flex-col gap-5">
         <div className="flex items-center justify-center">
           {
-            isLoading && (
+            isPending && (
               <div className="
               animate-spin rounded-full h-16 w-16 border-l-2 border-cyan-600"/>
             )
           }
         </div>
-        {/* {outputs.map((output, index) => (
+        {state.outputs.map((output, index) => (
           <div key={index} className="p-5 rounded-3xl bg-gray-500 ">
-            {output}
+            <div dangerouslySetInnerHTML={sanitizedData(output)} />
           </div>
-        ))} */}
-        {state?.output && (
+        ))}
+
+        {/* {state?.output && (
           <div className="p-5 rounded-3xl bg-gray-500">
             <div dangerouslySetInnerHTML={sanitizedData(state.output)} />
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

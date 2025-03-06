@@ -2,6 +2,7 @@
 
 import { convertHTML } from "@/lib/gemini";
 import { GoogleGenerativeAI, Part } from "@google/generative-ai";
+import { IinitialState } from "./page";
 
 async function formatImageForGemini(
   base64Data: Base64URLString,
@@ -16,37 +17,49 @@ async function formatImageForGemini(
 }
 
 export default async function questionGemini(
-  prevState: any,
+  prevState: IinitialState,
   formData: FormData
 ) {
-  console.log(prevState);
-  const data = {
-    imagePart: formData.get("imagePart"),
-    prompt: formData.get("prompt"),
-  };
+  {
+    const data = {
+      imagePart: formData.get("imagePart"),
+      prompt: formData.get("prompt"),
+    };
 
-  if (data.imagePart instanceof File && data.prompt !== null) {
-    const photoData = await data.imagePart.arrayBuffer();
-    const imageType = data.imagePart.type;
-    const base64Data = Buffer.from(photoData).toString("base64");
+    const { promptHistory, outputs, prompt } = prevState;
 
-    const imageData = await formatImageForGemini(base64Data, imageType);
+    if (data.imagePart instanceof File && data.prompt !== null) {
+      const photoData = await data.imagePart.arrayBuffer();
+      const imageType = data.imagePart.type;
+      const base64Data = Buffer.from(photoData).toString("base64");
 
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+      const imageData = await formatImageForGemini(base64Data, imageType);
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+      const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
-    const prompt = data.prompt?.toString() + " in korean";
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
-    const result = await model.generateContent(
-      base64Data ? [prompt, imageData] : prompt
-    );
+      const prompt = data.prompt?.toString() + " in korean";
 
-    const res = result.response;
+      const result = await model.generateContent(
+        base64Data ? [prompt, imageData] : prompt
+      );
 
-    const output = res.text();
+      const res = result.response;
+
+      const output = res.text();
+      return {
+        promptHistory: [...promptHistory, prompt],
+        outputs: [convertHTML(output), ...outputs],
+        prompt: "",
+        // output: convertHTML(output),
+      };
+    }
     return {
-      output: convertHTML(output),
+      promptHistory: [...promptHistory],
+      outputs: [...prevState.outputs],
+      prompt: "",
+      // output: convertHTML(output),
     };
   }
 }
