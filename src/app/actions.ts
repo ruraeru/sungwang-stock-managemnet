@@ -1,20 +1,8 @@
 "use server";
 
-import { convertHTML } from "@/lib/gemini";
-import { GoogleGenerativeAI, Part } from "@google/generative-ai";
+import { convertHTML, formatImageForGemini } from "@/lib/gemini";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { IinitialState } from "./page";
-
-async function formatImageForGemini(
-  base64Data: Base64URLString,
-  mimeType: string
-): Promise<Part> {
-  return {
-    inlineData: {
-      mimeType: mimeType,
-      data: base64Data,
-    },
-  };
-}
 
 export default async function questionGemini(
   prevState: IinitialState,
@@ -39,7 +27,10 @@ export default async function questionGemini(
 
       const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
-      const prompt = data.prompt?.toString() + " in korean";
+      // const prompt = data.prompt?.toString() + " in korean";
+
+      const prompt =
+        "View the image and extract the text in JSON format. Write the variable names using camelcase.";
 
       const result = await model.generateContent(
         base64Data ? [prompt, imageData] : prompt
@@ -52,14 +43,12 @@ export default async function questionGemini(
         promptHistory: [...promptHistory, prompt],
         outputs: [convertHTML(output), ...outputs],
         prompt: "",
-        // output: convertHTML(output),
       };
     }
     return {
       promptHistory: [...promptHistory],
       outputs: [...prevState.outputs],
       prompt: "",
-      // output: convertHTML(output),
     };
   }
 }

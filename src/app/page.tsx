@@ -1,6 +1,6 @@
 "use client"
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import { ChangeEvent, ReactElement, useActionState, useEffect, useRef, useState } from "react";
 import DOMPurify from "dompurify";
 import questionGemini from "./actions";
 
@@ -12,6 +12,7 @@ export interface IinitialState {
 
 export default function Home() {
   const [prompt, setPrompt] = useState('');
+  const [previewImg, setPreivew] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   //prompt 입력창 ref
@@ -39,6 +40,14 @@ export default function Home() {
     prompt: "",
   }
 
+  const onImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { target: { files } } = e;
+    if (!files) return;
+    const file = files[0];
+
+    setPreivew(URL.createObjectURL(file));
+  }
+
   const [state, action, isPending] = useActionState(questionGemini, initialState);
 
   return (
@@ -53,13 +62,34 @@ export default function Home() {
         ))}
       </ul>
       <form action={action} className="w-full flex flex-col gap-5">
+        <label
+          htmlFor="photo"
+          className="border-2 aspect-square flex items-center justify-center flex-col text-neutral-300 border-neutral-300 rounded-md border-dashed
+                    cursor-pointer bg-center bg-no-repeat bg-cover"
+          style={{
+            backgroundImage: `url(${previewImg})`
+          }}
+        >
+          {!previewImg ? (
+            <>
+              <p>이미지 아이콘</p>
+              {/* <PhotoIcon className="w-20" /> */}
+              <div className="text-neutral-400 text-sm">
+                사진을 추가해주세요.
+                {/* {state?.fieldErrors.photo} */}
+              </div>
+            </>
+          ) : null}
+        </label>
         <input
-          className="bg-transparent rounded-md  
+          id="photo"
+          className="bg-transparent rounded-md hidden
           h-10 focus:outline-none ring-2 focus:ring-4 transition
           ring-neutral-200 focus:ring-slate-500-500 border-none placeholder:text-neutral-400"
           type="file"
           accept="image/*"
           name="imagePart"
+          onChange={onImageChange}
         />
         <input
           className="bg-transparent rounded-md 
