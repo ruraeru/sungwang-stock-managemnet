@@ -1,8 +1,8 @@
 "use server";
 
-import { convertHTML, formatImageForGemini } from "@/lib/gemini";
+import { formatImageForGemini } from "@/lib/gemini";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { IinitialState } from "./page";
+import { IinitialState, TJson } from "./page";
 
 export default async function questionGemini(
   prevState: IinitialState,
@@ -14,7 +14,8 @@ export default async function questionGemini(
       prompt: formData.get("prompt"),
     };
 
-    const { promptHistory, outputs, prompt } = prevState;
+    // const { promptHistory, outputs, prompt } = prevState;
+    // const { output } = prevState;
 
     if (data.imagePart instanceof File && data.prompt !== null) {
       const photoData = await data.imagePart.arrayBuffer();
@@ -27,10 +28,8 @@ export default async function questionGemini(
 
       const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
-      // const prompt = data.prompt?.toString() + " in korean";
-
       const prompt =
-        "View the image and extract the text in JSON format. Write the variable names using camelcase.";
+        "View an image and extract values in JSON format. Let me show you an example transactionDetails: { supplier: { companyName: Sunil H&C, address: address, telephoneNumber:  telephoneNumber}, customer: { { companyName: companyName, address: address, telephoneNumber: telephoneNumber }, transactionDate: transactionDate, totalAmount: 111,500,creditAmount: 0 }, items: [ { 'productName': 'Stensirinda (8300SS) Bedroom', 'unitPrice': '6500', 'quantity': 5, 'totalPrice': '32,500' }, ]";
 
       const result = await model.generateContent(
         base64Data ? [prompt, imageData] : prompt
@@ -39,15 +38,28 @@ export default async function questionGemini(
       const res = result.response;
 
       const output = res.text();
+
+      const match = output.match(/`json\n([\s\S]*)\n`/);
+
+      if (match && match[1]) {
+        const json: TJson = JSON.parse(match[1]);
+
+        console.log(json);
+
+        return {
+          output: json,
+          prompt: "",
+        };
+      }
+
       return {
-        promptHistory: [...promptHistory, prompt],
-        outputs: [convertHTML(output), ...outputs],
+        output: null,
         prompt: "",
+        error: "JSON Code Block Not Found.",
       };
     }
     return {
-      promptHistory: [...promptHistory],
-      outputs: [...prevState.outputs],
+      output: null,
       prompt: "",
     };
   }

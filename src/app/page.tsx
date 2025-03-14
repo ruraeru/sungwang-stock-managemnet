@@ -1,42 +1,50 @@
 "use client"
 
-import { ChangeEvent, ReactElement, useActionState, useEffect, useRef, useState } from "react";
-import DOMPurify from "dompurify";
+import { ChangeEvent, useActionState, useState } from "react";
 import questionGemini from "./actions";
 
+
+export type TJson = {
+  transactionDetails: {
+    supplier: {
+      companyName: string;
+      address: string;
+      telephoneNumber: string;
+    },
+    customer: {
+      companyName: string;
+      address: string;
+      telephoneNumber: string;
+    },
+    transactionDate: string;
+    totalAmount: string;
+    creditAmount: string;
+    items: [
+      {
+        productName: string;
+        unitPrice: string;
+        quantity: string;
+        totalPrice: string;
+      }
+    ]
+  }
+}
 export interface IinitialState {
-  promptHistory: string[];
-  outputs: string[];
+  output: TJson | null;
   prompt: string;
 }
 
 export default function Home() {
   const [prompt, setPrompt] = useState('');
   const [previewImg, setPreivew] = useState<string | null>(null);
-  const inputRef = useRef<HTMLInputElement | null>(null);
-
-  //prompt 입력창 ref
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
-  const sanitizedData = (data: string) => ({
-    __html: DOMPurify.sanitize(data)
-  });
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.currentTarget;
     setPrompt(value);
   }
 
-  const selectPrompt = (prompt: string) => {
-    setPrompt(prompt);
-    inputRef.current?.focus();
-  }
-
   const initialState: IinitialState = {
-    promptHistory: [],
-    outputs: [],
+    output: null,
     prompt: "",
   }
 
@@ -52,15 +60,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-start pt-20 p-16 gap-5">
-      <h1 className="font-bold text-5xl text-center w-full">gemini 2.0 flash</h1>
-      <h1>이전 질문들?!</h1>
-      <ul>
-        {state.promptHistory.map((history, index) => (
-          <li key={index} onClick={() => selectPrompt(history)}>
-            {index + 1}: {history}
-          </li>
-        ))}
-      </ul>
+      <h1 className="font-bold text-2xl text-center w-full">빠재고 (빠르게 재고관리 해보자!)</h1>
       <form action={action} className="w-full flex flex-col gap-5">
         <label
           htmlFor="photo"
@@ -96,16 +96,16 @@ export default function Home() {
           min-h-10 focus:outline-none ring-2 focus:ring-4 transition
           ring-neutral-200 focus:ring-slate-500-500 border-none placeholder:text-neutral-400"
           value={prompt}
-          ref={inputRef}
           name="prompt"
           onChange={onChange}
         />
+        <button type="submit" className="bg-neutral-500 p-5 rounded-full">제출</button>
       </form>
 
-      <div className="flex items-center gap-5">
+      {/* <div className="flex items-center gap-5">
         <h1>답변</h1>
         <button>답변 초기화</button>
-      </div>
+      </div> */}
 
       <div className="w-full flex flex-col gap-5">
         <div className="flex items-center justify-center">
@@ -116,11 +116,18 @@ export default function Home() {
             )
           }
         </div>
-        {state.outputs.map((output, index) => (
-          <div key={index} className="p-5 rounded-3xl bg-gray-500 ">
-            <div dangerouslySetInnerHTML={sanitizedData(output)} />
+        {state.output && (
+          <div className="flex flex-col gap-5">
+            {state.output.transactionDetails.items.map((item) => (
+              <div key={item.productName} className="bg-gray-700">
+                <p>이름 : {item.productName}</p>
+                <p>수량 : {item.quantity}</p>
+                <p>총 가격 : {item.totalPrice}</p>
+                <p>개당 가격 : {item.unitPrice}</p>
+              </div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
     </div>
   );
