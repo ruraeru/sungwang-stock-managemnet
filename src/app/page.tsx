@@ -38,6 +38,7 @@ export default function Home() {
   const [prompt, setPrompt] = useState('');
   const [previewImg, setPreivew] = useState<string | null>(null);
 
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.currentTarget;
     setPrompt(value);
@@ -60,14 +61,17 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-start pt-20 p-16 gap-5">
-      <h1 className="font-bold text-2xl text-center w-full">빠재고 (빠르게 재고관리 해보자!)</h1>
+      <div className="text-center w-full">
+        <h1 className="font-bold text-3xl">빠재고</h1>
+        <p className="text-lg font-semibold">(빠르게 재고관리 해보자!)</p>
+      </div>
       <form action={action} className="w-full flex flex-col gap-5">
         <label
           htmlFor="photo"
           className="border-2 aspect-square flex items-center justify-center flex-col text-neutral-300 border-neutral-300 rounded-md border-dashed
                     cursor-pointer bg-center bg-no-repeat bg-cover"
           style={{
-            backgroundImage: `url(${previewImg})`
+            backgroundImage: previewImg ? `url(${previewImg})` : "none"
           }}
         >
           {!previewImg ? (
@@ -107,7 +111,7 @@ export default function Home() {
         <button>답변 초기화</button>
       </div> */}
 
-      <div className="w-full flex flex-col gap-5">
+      <div className="w-full flex flex-col gap-5" >
         <div className="flex items-center justify-center">
           {
             isPending && (
@@ -116,18 +120,20 @@ export default function Home() {
             )
           }
         </div>
-        {state.output && (
-          <div className="flex flex-col gap-5">
-            {state.output.transactionDetails.items.map((item) => (
-              <div key={item.productName} className="bg-gray-700">
-                <p>이름 : {item.productName}</p>
-                <p>수량 : {item.quantity}</p>
-                <p>총 가격 : {item.totalPrice}</p>
-                <p>개당 가격 : {item.unitPrice}</p>
-              </div>
-            ))}
-          </div>
-        )}
+        {
+          state.output && (
+            <div className="flex flex-col gap-5">
+              {state.output.transactionDetails.items.map((item) => (
+                <div key={item.productName} className="bg-gray-700">
+                  <p>이름 : {item.productName}</p>
+                  <p>수량 : {item.quantity}</p>
+                  <p>총 가격 : {item.totalPrice}</p>
+                  <p>개당 가격 : {item.unitPrice}</p>
+                </div>
+              ))}
+            </div>
+          )
+        }
       </div>
     </div>
   );
