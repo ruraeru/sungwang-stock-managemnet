@@ -44,8 +44,6 @@ export default async function questionGemini(
       if (match && match[1]) {
         const json: TJson = JSON.parse(match[1]);
 
-        console.log(json);
-
         return {
           output: json,
           prompt: "",

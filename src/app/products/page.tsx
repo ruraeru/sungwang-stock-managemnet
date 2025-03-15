@@ -38,41 +38,61 @@ async function getProducts(): Promise<Product[]> {
     });
     return products;
 }
-
 export default async function ProductList() {
     const products = await getProducts();
 
+    const deleteProduct = async () => {
+        "use server";
+
+        // await db.product.delete({
+        //     where: {
+        //         id
+        //     }
+        // });
+    }
+
     return (
-        <div>
+        <div className=''>
             <h1>상품 목록</h1>
             <Link href="/products/add">
                 <button>상품 추가</button>
             </Link>
-            <table className='table-auto border-collapse w-full'>
+            <table className='*:border-b'>
                 <thead>
-                    <tr className='border-b *:p-2 *:text-center'>
+                    <tr className='*:p-2 *:text-center'>
+                        <th>ID</th>
                         <th>상품명</th>
                         <th>분류</th>
-                        <th>설명</th>
+                        {/* <th>설명</th> */}
                         <th>수량</th>
                         <th>가격</th>
-                        <th>삭제</th>
+                        {/* <th>삭제</th> */}
+                        <th>d</th>
+                        <th>d</th>
                     </tr>
                 </thead>
                 <tbody>
                     {products.map((product) => (
-                        <tr key={product.id} className='border-b *:p-2 *:text-center'>
+                        <tr key={product.id} className='border-b *:text-center'>
+                            <td>
+                                <p>{product.id}</p>
+                            </td>
                             <td>
                                 <Link href={`/products/${product.id}`} key={product.id}>
-                                    {product.name}
+                                    <p className='text-left'>{product.name}</p>
                                 </Link>
                             </td>
                             <td>{product.category}</td>
-                            <td>{product.description}</td>
-                            <td>{product.unit}</td>
+                            {/* <td>{product.description}</td> */}
+                            <td>{product.currentStock}</td>
                             <td>{product.priceHistory[0].price}</td>
                             <td>
-                                <button>Delete</button>
+                                <button>수정</button>
+                            </td>
+                            <td>
+                                <form action={deleteProduct}>
+                                    <button>Delete</button>
+                                </form>
                             </td>
                         </tr>
                     ))}

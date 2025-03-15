@@ -30,6 +30,7 @@ export default async function DetailProduct({ params }: { params: Promise<{ id: 
                 <li>{id}</li>
                 <li>{name}</li>
                 <li>{description}</li>
+                <li>{unit}</li>
                 <li>{category}</li>
             </ul>
         </div>

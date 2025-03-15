@@ -2,7 +2,14 @@
 
 import { ChangeEvent, useActionState, useState } from "react";
 import questionGemini from "./actions";
+import { AddProducts } from "@/lib/addProducts";
 
+export type ProductType = {
+  productName: string;
+  unitPrice: string;
+  quantity: string;
+  totalPrice: string;
+}
 
 export type TJson = {
   transactionDetails: {
@@ -19,14 +26,7 @@ export type TJson = {
     transactionDate: string;
     totalAmount: string;
     creditAmount: string;
-    items: [
-      {
-        productName: string;
-        unitPrice: string;
-        quantity: string;
-        totalPrice: string;
-      }
-    ]
+    items: ProductType[];
   }
 }
 export interface IinitialState {
@@ -47,6 +47,12 @@ export default function Home() {
   const initialState: IinitialState = {
     output: null,
     prompt: "",
+  }
+
+  const onUpload = () => {
+    if (state.output?.transactionDetails.items) {
+      AddProducts(state.output?.transactionDetails.items);
+    }
   }
 
   const onImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -134,6 +140,7 @@ export default function Home() {
             </div>
           )
         }
+        <button onClick={onUpload}>업로드 하기!</button>
       </div>
     </div>
   );
