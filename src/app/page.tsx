@@ -67,7 +67,7 @@ export default function Home() {
   const [state, action, isPending] = useActionState(questionGemini, initialState);
 
   return (
-    <div className="flex flex-col items-start pt-20 p-16 gap-5">
+    <div className="flex flex-col items-start pt-20 p-16 gap-5 max-w-md mx-auto">
       <div className="text-center w-full">
         <h1 className="font-bold text-3xl">빠재고</h1>
         <p className="text-lg font-semibold">(빠르게 재고관리 해보자!)</p>

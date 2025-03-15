@@ -38,6 +38,7 @@ async function getProducts(): Promise<Product[]> {
     });
     return products;
 }
+
 export default async function ProductList() {
     const products = await getProducts();
 
@@ -52,7 +53,7 @@ export default async function ProductList() {
     }
 
     return (
-        <div>
+        <div className='w-full p-5'>
             <h1>상품 목록</h1>
             <Link href="/products/add">
                 <button>상품 추가</button>
@@ -64,13 +65,12 @@ export default async function ProductList() {
                         <th>상품명</th>
                         <th>수량</th>
                         <th>가격</th>
-                        <th className='max-md:hidden'>d</th>
-                        <th className='max-md:hidden'>d</th>
+                        <th colSpan={2} className='max-md:hidden'>더보기</th>
                     </tr>
                 </thead>
                 <tbody>
                     {products.map((product) => (
-                        <tr key={product.id} className='border-b *:text-center text-md'>
+                        <tr key={product.id} className='border-b *:text-center *:p-2 text-md'>
                             <td>
                                 <p>{product.id}</p>
                             </td>
@@ -81,10 +81,8 @@ export default async function ProductList() {
                             </td>
                             <td>{product.currentStock}</td>
                             <td>{product.priceHistory[0].price}</td>
-                            <td className='max-md:hidden'>
+                            <td colSpan={2} className='max-md:hidden flex items-center justify-center gap-2'>
                                 <button>수정</button>
-                            </td>
-                            <td className='max-md:hidden'>
                                 <form action={deleteProduct}>
                                     <button>Delete</button>
                                 </form>
