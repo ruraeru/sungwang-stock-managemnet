@@ -3,7 +3,7 @@
 import { ProductType } from "@/app/page";
 import db from "./db";
 
-export async function AddProducts(datas: ProductType[]) {
+export async function AddProducts(datas: ProductType[]): Promise<boolean> {
   datas.map(async (data) => {
     const isDefined = await SearchProduct(data.productName);
     if (isDefined?.id) {
@@ -13,6 +13,9 @@ export async function AddProducts(datas: ProductType[]) {
         },
         data: {
           currentStock: isDefined.currentStock + parseInt(data.quantity),
+        },
+        select: {
+          id: true,
         },
       });
     } else {
@@ -32,6 +35,7 @@ export async function AddProducts(datas: ProductType[]) {
       });
     }
   });
+  return true;
 }
 
 async function SearchProduct(name: string) {

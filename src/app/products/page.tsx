@@ -54,9 +54,11 @@ export default async function ProductList() {
 
     return (
         <div className='w-full p-5'>
-            <h1>상품 목록</h1>
+            <Link href="/">
+                <p>메인으로</p>
+            </Link>
             <Link href="/products/add">
-                <button>상품 추가</button>
+                <p>상품 추가</p>
             </Link>
             <table className='*:border-b text-nowrap w-full'>
                 <thead>

@@ -2,8 +2,8 @@
 
 import { ChangeEvent, useActionState, useState } from "react";
 import questionGemini from "./actions";
-import { AddProducts } from "@/lib/addProducts";
 import { PhotoIcon } from "@heroicons/react/20/solid";
+import { Input } from "@/components/Input";
 
 export type ProductType = {
   productName: string;
@@ -35,26 +35,21 @@ export interface IinitialState {
   prompt: string;
 }
 
+const initialState: IinitialState = {
+  output: null,
+  prompt: "",
+}
+
 export default function Home() {
-  const [prompt, setPrompt] = useState('');
+  // const [prompt, setPrompt] = useState('');
   const [previewImg, setPreivew] = useState<string | null>(null);
 
+  const [state, action, isPending] = useActionState(questionGemini, initialState);
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.currentTarget;
-    setPrompt(value);
-  }
-
-  const initialState: IinitialState = {
-    output: null,
-    prompt: "",
-  }
-
-  const onUpload = () => {
-    if (state.output?.transactionDetails.items) {
-      AddProducts(state.output?.transactionDetails.items);
-    }
-  }
+  // const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { value } = e.currentTarget;
+  //   setPrompt(value);
+  // }
 
   const onImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { target: { files } } = e;
@@ -63,8 +58,6 @@ export default function Home() {
 
     setPreivew(URL.createObjectURL(file));
   }
-
-  const [state, action, isPending] = useActionState(questionGemini, initialState);
 
   return (
     <div className="flex flex-col items-start pt-20 p-16 gap-5 max-w-md mx-auto">
@@ -76,7 +69,7 @@ export default function Home() {
         <label
           htmlFor="photo"
           className="border-2 aspect-square flex items-center justify-center flex-col text-neutral-300 border-neutral-300 rounded-md border-dashed
-                    cursor-pointer bg-center bg-no-repeat bg-cover"
+                    cursor-pointer bg-center bg-no-repeat bg-contain"
           style={{
             backgroundImage: previewImg ? `url(${previewImg})` : "none"
           }}
@@ -101,22 +94,16 @@ export default function Home() {
           name="imagePart"
           onChange={onImageChange}
         />
-        <input
+        {/* <input
           className="bg-transparent rounded-md 
           min-h-10 focus:outline-none ring-2 focus:ring-4 transition
           ring-neutral-200 focus:ring-slate-500-500 border-none placeholder:text-neutral-400"
           value={prompt}
           name="prompt"
           onChange={onChange}
-        />
-        <button type="submit" className="bg-neutral-500 p-5 rounded-full">제출</button>
+        /> */}
+        <button type="submit" className="bg-neutral-500 p-5 rounded-full">Parsing</button>
       </form>
-
-      {/* <div className="flex items-center gap-5">
-        <h1>답변</h1>
-        <button>답변 초기화</button>
-      </div> */}
-
       <div className="w-full flex flex-col gap-5" >
         <div className="flex items-center justify-center">
           {
@@ -126,21 +113,9 @@ export default function Home() {
             )
           }
         </div>
-        {
-          state.output && (
-            <div className="flex flex-col gap-5">
-              {state.output.transactionDetails.items.map((item) => (
-                <div key={item.productName} className="bg-gray-700">
-                  <p>이름 : {item.productName}</p>
-                  <p>수량 : {item.quantity}</p>
-                  <p>총 가격 : {item.totalPrice}</p>
-                  <p>개당 가격 : {item.unitPrice}</p>
-                </div>
-              ))}
-            </div>
-          )
-        }
-        <button onClick={onUpload}>업로드 하기!</button>
+        {state.output?.transactionDetails.items && (
+          <Input initialProductData={state.output?.transactionDetails.items} />
+        )}
       </div>
     </div>
   );

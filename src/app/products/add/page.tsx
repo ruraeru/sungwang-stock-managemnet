@@ -42,7 +42,7 @@ export default function AddProduct() {
                     className="border-2 aspect-square flex items-center justify-center flex-col text-neutral-300 border-neutral-300 rounded-md border-dashed
                     cursor-pointer bg-center bg-no-repeat bg-cover"
                     style={{
-                        backgroundImage: `url(${preview})`
+                        backgroundImage: preview ? `url(${preview})` : "none"
                     }}
                 >
                     {!preview ? (

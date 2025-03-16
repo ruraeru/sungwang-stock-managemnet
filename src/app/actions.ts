@@ -17,7 +17,7 @@ export default async function questionGemini(
     // const { promptHistory, outputs, prompt } = prevState;
     // const { output } = prevState;
 
-    if (data.imagePart instanceof File && data.prompt !== null) {
+    if (data.imagePart instanceof File) {
       const photoData = await data.imagePart.arrayBuffer();
       const imageType = data.imagePart.type;
       const base64Data = Buffer.from(photoData).toString("base64");
