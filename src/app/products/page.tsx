@@ -36,7 +36,11 @@ async function getProducts(): Promise<IProduct[]> {
 export default async function Page() {
     const products = await getProducts();
     return (
-        <div className='w-full p-5'>
+        <div className='h-screen flex flex-col justify-center'>
+            <div className="text-center w-full h-full absolute top-10">
+                <h1 className="font-bold text-3xl">빠재고</h1>
+                <p className="text-lg font-semibold">(빠르게 재고관리 해보자!)</p>
+            </div>
             <ProductList products={products} />
         </div>
     );
