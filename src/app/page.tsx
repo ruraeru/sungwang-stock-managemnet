@@ -3,8 +3,8 @@
 import { ChangeEvent, useActionState, useState } from "react";
 import questionGemini from "./actions";
 import { PhotoIcon } from "@heroicons/react/20/solid";
-import Input from "@/components/Input";
 import { IinitialState } from "@/config/types";
+import ProductInfoChangeForm from "@/components/product-info-change-form";
 
 const initialState: IinitialState = {
   output: null,
@@ -68,7 +68,7 @@ export default function Home() {
           }
         </div>
         {state.output?.items && (
-          <Input initialProductData={state.output?.items} />
+          <ProductInfoChangeForm initialProductData={state.output?.items} />
         )}
       </div>
     </div>

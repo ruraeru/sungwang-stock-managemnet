@@ -1,21 +1,22 @@
 "use client"
 
 import { useActionState, useState } from "react";
-import { useForm } from "react-hook-form"
 import { createProduct } from "./actions";
+import Input from "@/components/products/add/input";
+import Button from "@/components/button";
 
-interface ProductFormData {
-    name: string;
-    description?: string;
-    category: string;
-    unit: string;
-    currentStock: string;
-    price: string;
-    imageUrl: string;
-}
+// interface ProductFormData {
+//     name: string;
+//     description?: string;
+//     category: string;
+//     unit: string;
+//     currentStock: string;
+//     price: string;
+//     imageUrl: string;
+// }
 
 export default function AddProduct() {
-    const { register } = useForm<ProductFormData>();
+    // const { register } = useForm<ProductFormData>();
     const [state, action] = useActionState(createProduct, null);
     const [preview, setPreview] = useState<null | string>(null);
     const onImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,8 +36,8 @@ export default function AddProduct() {
         setPreview(URL.createObjectURL(file));
     }
     return (
-        <div>
-            <form action={action} className='flex flex-col max-w-sm justify-center *:text-black'>
+        <div className="max-w-md mx-auto p-5">
+            <form action={action} className='flex flex-col justify-center gap-5'>
                 <label
                     htmlFor="photo"
                     className="border-2 aspect-square flex items-center justify-center flex-col text-neutral-300 border-neutral-300 rounded-md border-dashed
@@ -66,30 +67,47 @@ export default function AddProduct() {
                     required
                 />
 
-                <label htmlFor="name">Name:</label>
-                <input type="text" id="name" {...register("name", { required: "Name is required" })} placeholder="Name" />
-                {state?.fieldErrors.name && <p>{state?.fieldErrors.name}</p>}
+                <Input
+                    required
+                    placeholder="제품명"
+                    name="name"
+                    errors={state?.fieldErrors.name}
+                />
+                <Input
+                    required
+                    placeholder="제품 설명"
+                    name="description"
+                    errors={state?.fieldErrors.description}
+                />
 
-                <label htmlFor="description">Description:</label>
-                <textarea id="description" {...register("description")} placeholder="Description" />
-
-                <label htmlFor="category">Category:</label>
-                <input type="text" id="category" {...register("category", { required: "Category is required" })} placeholder="Category" />
-                {state?.fieldErrors.category && <p>{state?.fieldErrors.category}</p>}
-
-                <label htmlFor="unit">Unit:</label>
-                <input type="text" id="unit" {...register("unit", { required: "Unit is required" })} placeholder="Unit" />
-                {state?.fieldErrors.unit && <p>{state?.fieldErrors.unit}</p>}
-
-                <label htmlFor="currentStock">Current Stock:</label>
-                <input type="number" id="currentStock" {...register("currentStock", { required: "Current Stock is required", valueAsNumber: true })} placeholder="Current Stock" />
-                {state?.fieldErrors.currentStock && <p>{state?.fieldErrors.currentStock}</p>}
-
-                <label htmlFor="price">Price:</label>
-                <input type="number" id="price" {...register("price", { required: "Price is required", valueAsNumber: true })} placeholder="Price" />
-                {state?.fieldErrors.price && <p>{state?.fieldErrors.price}</p>}
-
-                <button type="submit" className="bg-white w-full">Add Product</button>
+                <Input
+                    required
+                    placeholder="카테고리"
+                    name="category"
+                    errors={state?.fieldErrors.category}
+                />
+                <Input
+                    required
+                    type="number"
+                    placeholder="수량"
+                    name="unit"
+                    errors={state?.fieldErrors.unit}
+                />
+                <Input
+                    required
+                    type="number"
+                    placeholder="현재 수량"
+                    name="currentStock"
+                    errors={state?.fieldErrors.currentStock}
+                />
+                <Input
+                    required
+                    type="number"
+                    placeholder="가격"
+                    name="price"
+                    errors={state?.fieldErrors.price}
+                />
+                <Button text="추가하기!" />
             </form>
         </div>
     )

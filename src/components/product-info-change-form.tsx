@@ -5,7 +5,7 @@ import { AddProducts } from "@/lib/addProducts";
 import { redirect } from "next/navigation";
 import React, { ChangeEvent, useCallback, useState } from "react";
 
-function Input({ initialProductData }: { initialProductData: ProductType[] }) {
+function ProductInfoChangeForm({ initialProductData }: { initialProductData: ProductType[] }) {
     const [productData, setProductData] = useState<ProductType[]>(initialProductData);
 
     const onChangeInfo = useCallback((e: ChangeEvent<HTMLInputElement>, index: number) => {
@@ -57,4 +57,4 @@ function Input({ initialProductData }: { initialProductData: ProductType[] }) {
     );
 }
 
-export default React.memo(Input);
+export default React.memo(ProductInfoChangeForm);

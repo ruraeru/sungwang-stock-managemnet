@@ -6,14 +6,51 @@ import { z } from "zod";
 import fs from "fs/promises";
 
 const productSchema = z.object({
-  name: z.string(),
-  description: z.string(),
-  category: z.string(),
-  unit: z.string(),
-  currentStock: z.string(),
-  price: z.string(),
-  photo: z.string(),
+  name: z.string({
+    required_error: "상품명을 입력해주세요",
+  }),
+  description: z.string({
+    required_error: "상품명을 입력해주세요",
+  }),
+  category: z.string({
+    required_error: "상품명을 입력해주세요",
+  }),
+  unit: z.string({
+    required_error: "상품명을 입력해주세요",
+  }),
+  currentStock: z.coerce.number({
+    required_error: "상품명을 입력해주세요",
+  }),
+  price: z.coerce.number({
+    required_error: "상품명을 입력해주세요",
+  }),
+  photo: z.string({
+    required_error: "상품명을 입력해주세요",
+  }),
 });
+
+type ProductInput = z.infer<typeof productSchema>;
+
+async function createProductInDB(data: ProductInput) {
+  return await db.product.create({
+    data: {
+      name: data.name,
+      description: data.description,
+      category: data.category,
+      unit: data.unit,
+      currentStock: data.currentStock,
+      priceHistory: {
+        create: {
+          price: data.price,
+        },
+      },
+      imageUrl: data.photo,
+    },
+    select: {
+      id: true,
+    },
+  });
+}
 
 export async function createProduct(_: unknown, formData: FormData) {
   const data = {
@@ -42,27 +79,7 @@ export async function createProduct(_: unknown, formData: FormData) {
   if (!results.success) {
     return results.error.flatten();
   } else {
-    const { name, description, category, unit, currentStock, price, photo } =
-      results.data;
-    const product = await db.product.create({
-      data: {
-        name,
-        description,
-        category,
-        unit,
-        currentStock: parseInt(currentStock),
-        priceHistory: {
-          create: {
-            price: parseInt(price),
-          },
-        },
-        imageUrl: photo,
-      },
-      select: {
-        id: true,
-      },
-    });
-    console.log(product);
+    const product = await createProductInDB(results.data);
     redirect("/products");
   }
 }
