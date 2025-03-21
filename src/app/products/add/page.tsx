@@ -52,7 +52,7 @@ export default function AddProduct() {
                             <PhotoIcon className="w-20" />
                             <div className="text-neutral-400 text-sm">
                                 사진을 추가해주세요.
-                                {state?.fieldErrors.photo}
+                                {state?.fieldErrors.imageUrl}
                             </div>
                         </>
                     ) : null}
@@ -64,14 +64,14 @@ export default function AddProduct() {
                     name="photo"
                     accept="image/*"
                     className="hidden"
-                    errors={state?.fieldErrors.photo}
+                    errors={state?.fieldErrors.imageUrl}
                 />
 
                 <Input
                     required
                     placeholder="제품명"
-                    name="name"
-                    errors={state?.fieldErrors.name}
+                    name="productName"
+                    errors={state?.fieldErrors.productName}
                 />
                 <Input
                     required
@@ -90,8 +90,8 @@ export default function AddProduct() {
                     required
                     type="number"
                     placeholder="수량"
-                    name="unit"
-                    errors={state?.fieldErrors.unit}
+                    name="quantity"
+                    errors={state?.fieldErrors.quantity}
                 />
                 <Input
                     required

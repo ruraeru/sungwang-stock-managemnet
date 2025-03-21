@@ -3,6 +3,7 @@ export type ProductType = {
   unitPrice: string;
   quantity: string;
   totalPrice: string;
+  imageUrl?: string;
 };
 
 export type TJson = {

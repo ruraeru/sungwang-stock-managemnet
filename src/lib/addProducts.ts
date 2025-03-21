@@ -1,29 +1,21 @@
 "use server";
 
-import { ProductType } from "@/app/page";
+import { ProductType } from "@/config/types";
 import db from "./db";
+import { existsProduct, updateExistsProduct } from "./product";
 
 export async function AddProducts(datas: ProductType[]): Promise<boolean> {
   datas.map(async (data) => {
-    const isDefined = await SearchProduct(data.productName);
-    if (isDefined?.id) {
-      await db.product.update({
-        where: {
-          id: isDefined.id,
-        },
-        data: {
-          currentStock: isDefined.currentStock + parseInt(data.quantity),
-        },
-        select: {
-          id: true,
-        },
-      });
+    const isDefined = await existsProduct(data.productName);
+    if (isDefined) {
+      updateExistsProduct(data, isDefined);
     } else {
       await db.product.create({
         data: {
+          imageUrl: "images/default.png",
           name: data.productName,
           description: data.productName,
-          category: "전기",
+          category: "미분류",
           unit: data.quantity.toString(),
           currentStock: parseInt(data.quantity),
           priceHistory: {
@@ -36,15 +28,4 @@ export async function AddProducts(datas: ProductType[]): Promise<boolean> {
     }
   });
   return true;
-}
-
-async function SearchProduct(name: string) {
-  const product = await db.product.findUnique({
-    where: { name },
-    select: {
-      id: true,
-      currentStock: true,
-    },
-  });
-  return product;
 }
