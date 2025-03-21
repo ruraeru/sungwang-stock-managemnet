@@ -57,24 +57,15 @@ export default function AddProduct() {
                         </>
                     ) : null}
                 </label>
-                <input
+                <Input
                     onChange={onImageChange}
                     type="file"
                     id="photo"
-                    name="photo"
-                    accept="image/*"
-                    className="hidden"
-                />
-                {/* <Input
-                    onChange={onImageChange}
-                    required
-                    id="photo"
-                    type="file"
                     name="photo"
                     accept="image/*"
                     className="hidden"
                     errors={state?.fieldErrors.photo}
-                /> */}
+                />
 
                 <Input
                     required
