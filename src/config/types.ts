@@ -27,3 +27,26 @@ export interface IinitialState {
   output: TJson | null;
   prompt: string;
 }
+
+export interface IProduct {
+  id: number;
+  name: string;
+  description?: string;
+  category: string;
+  unit: string;
+  currentStock: number;
+  priceHistory: PriceChange[];
+  stockHistory: StockChange[];
+}
+interface PriceChange {
+  id: number;
+  productId: number;
+  price: number;
+  date: Date;
+}
+interface StockChange {
+  id: number;
+  productId: number;
+  quantity: number;
+  date: Date;
+}
