@@ -2,6 +2,7 @@ import CloseBtn from "@/components/modal/modal-button";
 import { getProduct } from "@/lib/product";
 import { PhotoIcon } from "@heroicons/react/20/solid";
 import Image from "next/image";
+import Link from "next/link";
 
 export default async function Modal({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -13,7 +14,9 @@ export default async function Modal({ params }: { params: Promise<{ id: string }
                 <div className="aspect-square bg-neutral-700 text-neutral-200 rounded-md flex justify-center items-center flex-col p-5">
                     {product?.imageUrl ? (
                         <div className="relative w-full h-full">
-                            <Image src={product?.imageUrl} fill alt="dd" className="object-cover" sizes="full" />
+                            <Link href={`/products/${id}`}>
+                                <Image src={product?.imageUrl} fill alt="dd" className="object-cover" sizes="full" />
+                            </Link>
                         </div>
                     ) : (
                         <PhotoIcon className="h-28" />

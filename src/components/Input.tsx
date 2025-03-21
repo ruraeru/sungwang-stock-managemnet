@@ -1,14 +1,14 @@
 "use client"
 
-import { ProductType } from "@/app/page";
+import { ProductType } from "@/config/types";
 import { AddProducts } from "@/lib/addProducts";
 import { redirect } from "next/navigation";
-import { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useCallback, useState } from "react";
 
-export function Input({ initialProductData }: { initialProductData: ProductType[] }) {
+function Input({ initialProductData }: { initialProductData: ProductType[] }) {
     const [productData, setProductData] = useState<ProductType[]>(initialProductData);
 
-    const onChangeInfo = (e: ChangeEvent<HTMLInputElement>, index: number) => {
+    const onChangeInfo = useCallback((e: ChangeEvent<HTMLInputElement>, index: number) => {
         const { name, value } = e.target;
 
         setProductData(prevData => {
@@ -19,15 +19,14 @@ export function Input({ initialProductData }: { initialProductData: ProductType[
                 return item;
             });
         });
-    };
+    }, []);
 
-    const onUpload = async () => {
+    const onUpload = useCallback(async () => {
         if (await AddProducts(productData)) {
             alert("업로드 성공!");
             redirect("/products");
         }
-    }
-
+    }, [productData]);
     return (
         <div>
             <div className="flex flex-col gap-5">
@@ -57,3 +56,5 @@ export function Input({ initialProductData }: { initialProductData: ProductType[
         </div>
     );
 }
+
+export default React.memo(Input);

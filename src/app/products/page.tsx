@@ -1,5 +1,6 @@
 import ProductList from '@/components/product-list';
 import db from '@/lib/db';
+import Link from 'next/link';
 export interface IProduct {
     id: number;
     name: string;
@@ -37,10 +38,10 @@ export default async function Page() {
     const products = await getProducts();
     return (
         <div className='h-screen flex flex-col justify-center'>
-            <div className="text-center w-full h-full absolute top-10">
+            <Link href="/" className="text-center w-full h-full absolute top-10">
                 <h1 className="font-bold text-3xl">빠재고</h1>
                 <p className="text-lg font-semibold">(빠르게 재고관리 해보자!)</p>
-            </div>
+            </Link>
             <ProductList products={products} />
         </div>
     );

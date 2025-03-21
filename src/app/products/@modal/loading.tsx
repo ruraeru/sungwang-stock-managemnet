@@ -6,7 +6,7 @@ export default function Loading() {
             <div className="max-w-screen-sm h-1/2 flex justify-center w-full">
                 <div className="aspect-square bg-neutral-700 text-neutral-200 rounded-md p-5">
                     <div className="animate-pulse w-full h-full flex flex-col gap-2">
-                        <div className="w-full h-full flex items-center justify-center border-4 border-dashed">
+                        <div className="w-full h-full flex items-center justify-center border-4 border-dashed rounded-md">
                             <PhotoIcon className="h-28" />
                         </div>
                         <div className="w-full">
