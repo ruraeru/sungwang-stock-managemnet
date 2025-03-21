@@ -24,9 +24,7 @@ const productSchema = z.object({
   price: z.coerce.number({
     required_error: "상품명을 입력해주세요",
   }),
-  photo: z.string({
-    required_error: "상품명을 입력해주세요",
-  }),
+  photo: z.any(),
 });
 
 type ProductInput = z.infer<typeof productSchema>;
@@ -60,16 +58,20 @@ export async function createProduct(_: unknown, formData: FormData) {
     photo: formData.get("photo"),
   };
   if (data.photo instanceof File) {
-    const randomFileName = `${Math.random().toString(36).substring(2, 11)}.${
-      data.photo.type.split("/")[1]
-    }`;
-    const photoData = await data.photo.arrayBuffer();
-    await fs.appendFile(
-      `./public/images/${randomFileName}`,
-      Buffer.from(photoData)
-    );
+    if (data.photo.size === 0) {
+      data.photo = null;
+    } else {
+      const randomFileName = `${Math.random().toString(36).substring(2, 11)}.${
+        data.photo.type.split("/")[1]
+      }`;
+      const photoData = await data.photo.arrayBuffer();
+      await fs.appendFile(
+        `./public/images/${randomFileName}`,
+        Buffer.from(photoData)
+      );
 
-    data.photo = `/images/${randomFileName}`;
+      data.photo = `/images/${randomFileName}`;
+    }
   }
   const results = productSchema.safeParse(data);
 

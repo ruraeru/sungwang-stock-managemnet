@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import { createProduct } from "./actions";
 import Input from "@/components/products/add/input";
 import Button from "@/components/button";
+import { PhotoIcon } from "@heroicons/react/20/solid";
 
 // interface ProductFormData {
 //     name: string;
@@ -48,8 +49,7 @@ export default function AddProduct() {
                 >
                     {!preview ? (
                         <>
-                            <p>이미지 아이콘</p>
-                            {/* <PhotoIcon className="w-20" /> */}
+                            <PhotoIcon className="w-20" />
                             <div className="text-neutral-400 text-sm">
                                 사진을 추가해주세요.
                                 {state?.fieldErrors.photo}
@@ -64,8 +64,17 @@ export default function AddProduct() {
                     name="photo"
                     accept="image/*"
                     className="hidden"
-                    required
                 />
+                {/* <Input
+                    onChange={onImageChange}
+                    required
+                    id="photo"
+                    type="file"
+                    name="photo"
+                    accept="image/*"
+                    className="hidden"
+                    errors={state?.fieldErrors.photo}
+                /> */}
 
                 <Input
                     required
