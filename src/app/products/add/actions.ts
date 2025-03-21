@@ -46,9 +46,6 @@ async function createProductInDB(data: ProductInput) {
       },
       imageUrl: data.photo,
     },
-    select: {
-      id: true,
-    },
   });
 }
 
@@ -79,7 +76,7 @@ export async function createProduct(_: unknown, formData: FormData) {
   if (!results.success) {
     return results.error.flatten();
   } else {
-    const product = await createProductInDB(results.data);
+    await createProductInDB(results.data);
     redirect("/products");
   }
 }
