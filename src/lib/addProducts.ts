@@ -12,7 +12,7 @@ export async function AddProducts(datas: ProductType[]): Promise<boolean> {
     } else {
       await db.product.create({
         data: {
-          imageUrl: "images/default.png",
+          imageUrl: "/images/default.png",
           name: data.productName,
           description: data.productName,
           category: "미분류",
