@@ -28,7 +28,7 @@ function ProductInfoChangeForm({ initialProductData }: { initialProductData: Pro
         }
     }, [productData]);
     return (
-        <div>
+        <div className="flex flex-col gap-5 p-5">
             <div className="flex flex-col gap-5">
                 {productData.map((item, index) => (
                     <div key={index} className="bg-gray-700 *:text-black w-full p-2 *:w-full flex flex-col gap-2">
@@ -52,7 +52,12 @@ function ProductInfoChangeForm({ initialProductData }: { initialProductData: Pro
                 ))
                 }
             </div>
-            <button onClick={onUpload}>업로드 하기!</button>
+            <button onClick={onUpload} className="h-10 
+        disabled:bg-neutral-400
+         disabled:text-neutral-300
+         disabled:cursor-not-allowed
+         w-full bg-cyan-500 text-white font-medium rounded-md
+         text-center hover:bg-cyan-400 transition-colors">업로드 하기!</button>
         </div>
     );
 }

@@ -20,7 +20,7 @@ export default function ProductList({ products }: { products: IProduct[] }) {
     }, [products, keyword]);
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8 mb-20">
             <div className="flex w-full flex-col">
                 <div className="min-w-[200px]">
                     <input className="w-full bg-transparent placeholder:text-slate-300 text-white text-sm border border-slate-400 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-50 hover:border-slate-300 shadow-sm focus:shadow" placeholder="제품 검색"
