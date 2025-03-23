@@ -61,6 +61,7 @@ async function processImage(file: File) {
 
 const prompt = `
       View an image and extract values in JSON format. 
+      if price 16,500 -> 16500
       Let me show you an example transactionDetails: { 
        supplier: { 
          companyName: Sunil H&C, 
@@ -73,7 +74,7 @@ const prompt = `
          telephoneNumber: telephoneNumber 
        }, 
        transactionDate: transactionDate, 
-       totalAmount: 111,500,
+       totalAmount: 111500,
        creditAmount: 0 
      }, 
      items: [ 
@@ -81,7 +82,7 @@ const prompt = `
          'productName': 'Stensirinda (8300SS) Bedroom', 
          'unitPrice': '6500', 
          'quantity': 5, 
-         'totalPrice': '32,500' 
+         'totalPrice': '32500' 
        }, 
      ]
 `;

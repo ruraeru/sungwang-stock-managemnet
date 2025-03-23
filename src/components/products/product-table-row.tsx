@@ -1,4 +1,5 @@
 import { IProduct } from "@/config/types";
+import { formatCurrency } from "@/lib/utils";
 import Link from "next/link";
 
 export default function ProductTableRow({ product }: { product: IProduct }) {
@@ -11,7 +12,7 @@ export default function ProductTableRow({ product }: { product: IProduct }) {
                 </Link>
             </td>
             <td className="py-2 px-4">{product.currentStock}</td>
-            <td className="py-2 px-4">{product.priceHistory[0].price}</td>
+            <td className="py-2 px-4">{formatCurrency(product.priceHistory[0].price)}</td>
             <td className="py-2 px-4 max-md:hidden">
                 <div className="flex gap-2 justify-around">
                     <button className="px-3 py-1 rounded hover:bg-gray-200">수정</button>
